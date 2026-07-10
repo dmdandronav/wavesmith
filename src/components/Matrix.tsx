@@ -8,7 +8,7 @@ interface MatrixProps {
   onToggle: (lane: Lane, row: number, step: number) => void;
 }
 
-const DRUM_LANES: Array<{ lane: Lane; label: string }> = [
+const DRUM_LANES: Array<{ lane: Exclude<Lane, 'lead'>; label: string }> = [
   { lane: 'bass', label: 'bass' },
   { lane: 'kick', label: 'kick' },
   { lane: 'hat', label: 'hat' },
@@ -44,7 +44,7 @@ export default function Matrix({ pattern, playheadStep, onToggle }: MatrixProps)
       {DRUM_LANES.map(({ lane, label }) => (
         <div className="lane" key={lane}>
           <span className="lane-label">{label}</span>
-          {(pattern[lane] as boolean[]).map((on, s) => (
+          {pattern[lane].map((on, s) => (
             <button
               key={s}
               type="button"

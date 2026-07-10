@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { STEPS } from '../core/pattern';
 
 interface WaveformStripProps {
@@ -8,6 +8,15 @@ interface WaveformStripProps {
 
 export default function WaveformStrip({ samples, playheadStep }: WaveformStripProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [redraw, setRedraw] = useState(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const observer = new ResizeObserver(() => setRedraw((n) => n + 1));
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -48,7 +57,7 @@ export default function WaveformStrip({ samples, playheadStep }: WaveformStripPr
         if (samples[i] < min) min = samples[i];
         if (samples[i] > max) max = samples[i];
       }
-      ctx.fillRect(x, mid + min * mid * 0.92, 1, Math.max(1, (max - min) * mid * 0.92));
+      ctx.fillRect(x, mid - max * mid * 0.92, 1, Math.max(1, (max - min) * mid * 0.92));
     }
 
     if (playheadStep !== null) {
@@ -57,7 +66,7 @@ export default function WaveformStrip({ samples, playheadStep }: WaveformStripPr
       ctx.fillRect(((playheadStep + 0.5) / STEPS) * width - 1, 0, 2, height);
       ctx.globalAlpha = 1;
     }
-  }, [samples, playheadStep]);
+  }, [samples, playheadStep, redraw]);
 
   return (
     <section className="strip panel" aria-label="Rendered waveform">

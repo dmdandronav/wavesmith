@@ -1,5 +1,18 @@
 import { describe, expect, test } from 'vitest';
-import { makeNoise, pulse25, saw, square, tone, triangle } from './osc';
+import { makeNoise, pulse25, saw, square, triangle, type Oscillator } from './osc';
+
+/** Phase-accumulation helper mirroring how render.ts drives oscillators. */
+function tone(osc: Oscillator, freq: number, nSamples: number, sampleRate: number): Float32Array {
+  const out = new Float32Array(nSamples);
+  let phase = 0;
+  const step = freq / sampleRate;
+  for (let i = 0; i < nSamples; i++) {
+    out[i] = osc(phase);
+    phase += step;
+    if (phase >= 1) phase -= 1;
+  }
+  return out;
+}
 
 describe('oscillators', () => {
   test('square is +1 for first half period, -1 for second', () => {

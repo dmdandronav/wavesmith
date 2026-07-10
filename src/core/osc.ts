@@ -31,16 +31,3 @@ export function makeNoise(seed: number): () => number {
     return (s / 0x80000000) - 1;
   };
 }
-
-/** Render a raw tone via phase accumulation (no envelope). */
-export function tone(osc: Oscillator, freq: number, nSamples: number, sampleRate: number): Float32Array {
-  const out = new Float32Array(nSamples);
-  let phase = 0;
-  const step = freq / sampleRate;
-  for (let i = 0; i < nSamples; i++) {
-    out[i] = osc(phase);
-    phase += step;
-    if (phase >= 1) phase -= 1;
-  }
-  return out;
-}

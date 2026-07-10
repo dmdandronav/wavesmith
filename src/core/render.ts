@@ -21,16 +21,15 @@ function addNote(
   lengthSamples: number,
   decayTauS: number,
 ): void {
-  const end = Math.min(start + lengthSamples, out.length);
   const attackSamples = Math.max(1, Math.round(ATTACK_S * SAMPLE_RATE));
   const decayK = Math.exp(-1 / (decayTauS * SAMPLE_RATE));
   let phase = 0;
   const phaseStep = freq / SAMPLE_RATE;
   let env = 1;
-  for (let i = start; i < end; i++) {
-    const t = i - start;
+  // tails wrap around the buffer end: the pattern loops, so the seam stays click-free
+  for (let t = 0; t < Math.min(lengthSamples, out.length); t++) {
     const attack = t < attackSamples ? t / attackSamples : 1;
-    out[i] += osc(phase) * gain * attack * env;
+    out[(start + t) % out.length] += osc(phase) * gain * attack * env;
     if (t >= attackSamples) env *= decayK;
     phase += phaseStep;
     if (phase >= 1) phase -= 1;
@@ -38,13 +37,13 @@ function addNote(
 }
 
 function addKick(out: Float32Array, start: number): void {
-  const length = Math.min(Math.round(0.16 * SAMPLE_RATE), out.length - start);
+  const length = Math.min(Math.round(0.16 * SAMPLE_RATE), out.length);
   let phase = 0;
   for (let i = 0; i < length; i++) {
     const t = i / SAMPLE_RATE;
     const freq = 150 * Math.exp(-t / 0.05) + 45;
     const env = Math.exp(-t / 0.06);
-    out[start + i] += sine(phase) * KICK_GAIN * env;
+    out[(start + i) % out.length] += sine(phase) * KICK_GAIN * env;
     phase += freq / SAMPLE_RATE;
     if (phase >= 1) phase -= 1;
   }
@@ -52,10 +51,10 @@ function addKick(out: Float32Array, start: number): void {
 
 function addHat(out: Float32Array, start: number, step: number): void {
   const noise = makeNoise(0xc0ffee ^ step); // per-step seed keeps renders deterministic
-  const length = Math.min(Math.round(0.05 * SAMPLE_RATE), out.length - start);
+  const length = Math.min(Math.round(0.05 * SAMPLE_RATE), out.length);
   for (let i = 0; i < length; i++) {
     const env = Math.exp(-(i / SAMPLE_RATE) / 0.012);
-    out[start + i] += noise() * HAT_GAIN * env;
+    out[(start + i) % out.length] += noise() * HAT_GAIN * env;
   }
 }
 

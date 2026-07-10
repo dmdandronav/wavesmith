@@ -35,7 +35,10 @@ export default function App() {
         audio.currentTime = resumeAt % audio.duration;
       }
     };
-    audio.play().catch(() => setPlaying(false));
+    audio.play().catch((error: DOMException) => {
+      // reassigning src mid-play aborts the pending promise; that's not a failure
+      if (error.name !== 'AbortError') setPlaying(false);
+    });
     if (previousUrl) URL.revokeObjectURL(previousUrl);
   }, [playing, wavBytes]);
 

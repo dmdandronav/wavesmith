@@ -57,6 +57,16 @@ describe('renderPattern', () => {
     }
   });
 
+  test('a final-step note wraps its tail to the buffer start (click-free loop seam)', () => {
+    const p = emptyPattern();
+    p.lead[3][STEPS - 1] = true;
+    const out = renderPattern(p);
+    const per = stepSamples(p.tempo);
+    expect(rms(out, per * (STEPS - 1), per * STEPS)).toBeGreaterThan(0.02);
+    expect(rms(out, 0, Math.floor(per * 0.5))).toBeGreaterThan(0.001); // wrapped tail
+    expect(rms(out, per * 8, per * 9)).toBe(0); // still silent far away
+  });
+
   test('tempo changes step length', () => {
     expect(stepSamples(70)).toBe(2 * stepSamples(140));
   });
