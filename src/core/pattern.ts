@@ -20,6 +20,8 @@ const semitone = (n: number) => A4 * 2 ** (n / 12);
 /** A-minor pentatonic, two octaves, high to low: A5 G5 E5 D5 C5 A4 G4 E4 */
 export const LEAD_FREQS: readonly number[] = [12, 10, 7, 5, 3, 0, -2, -5].map(semitone);
 
+export const LEAD_LABELS: readonly string[] = ['A5', 'G5', 'E5', 'D5', 'C5', 'A4', 'G4', 'E4'];
+
 export const BASS_FREQ = semitone(-24); // A2
 
 export function emptyPattern(): Pattern {
