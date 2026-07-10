@@ -86,7 +86,8 @@ export default function App() {
     anchor.href = url;
     anchor.download = 'wavesmith-pattern.wav';
     anchor.click();
-    URL.revokeObjectURL(url);
+    // revoke async: Safari resolves the download's blob fetch after this task
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   };
 
   return (
