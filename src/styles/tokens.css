@@ -1,0 +1,31 @@
+:root {
+  /* four-track tape studio: warm charcoal, cream ink, VU amber */
+  --color-surface: oklch(21% 0.012 60);
+  --color-panel: oklch(26% 0.014 60);
+  --color-panel-raised: oklch(30% 0.016 60);
+  --color-ink: oklch(93% 0.02 85);
+  --color-ink-soft: oklch(68% 0.02 75);
+  --color-line: oklch(36% 0.015 60);
+  --color-accent: oklch(78% 0.16 75);
+  --color-accent-deep: oklch(62% 0.15 60);
+  --color-accent-ink: oklch(20% 0.04 75);
+  --color-lead: oklch(78% 0.16 75);
+  --color-bass: oklch(70% 0.12 150);
+  --color-drum: oklch(70% 0.14 25);
+
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  --text-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --text-wordmark: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+
+  --space-gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+
+  --radius-panel: 12px;
+  --radius-control: 7px;
+
+  --duration-fast: 140ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --shadow-panel: 0 1px 2px oklch(10% 0.01 60 / 0.4), 0 14px 36px -20px oklch(8% 0.01 60 / 0.8);
+}
